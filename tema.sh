@@ -1,2 +1,2 @@
 ┌──(kali㉿kali)-[~/Desktop/Tema]
-└─$ ssh-keygen -t rsa -b 4096
+└─$ ssh-keygen -t rsa -b 4095
