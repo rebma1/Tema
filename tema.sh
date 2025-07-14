@@ -77,3 +77,68 @@ Mesaj original
 └─$ sha256sum mesaj.txt                                            
 418ce6ea941e3d70f57aee732df43f95f23c753bd25ad1968a8233ddd0f55a23  mesaj.txt
 
+
+
+
+
+
+
+──(kali㉿kali)-[~]
+└─$ echo " Creare hashing.txt "                     
+ Creare hashing.txt 
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ echo "The password is a strong password that the user is using and sends the password to a colleague" > hashing.txt
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ echo " Generare chei și IV"   
+ Generare chei și IV
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ openssl rand -out key128.bin 16
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ openssl rand -out key192.bin 24 
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ openssl rand -out iv.bin 16
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ echo " Criptare 128-ECB (fără IV)" 
+ Criptare 128-ECB (fără IV)
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ openssl enc -aes-128-ecb -in hashing.txt -out hashing_ecb.enc -K $(xxd -p key128.bin) -nosalt 
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ echo " Criptare 192-CFB (cu IV)" 
+ Criptare 192-CFB (cu IV)
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ openssl enc -aes-192-cfb -in hashing.txt -out hashing_cfb.enc -K $(xxd -p key192.bin) -iv $(xxd -p iv.bin) -nosalt
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ echo " Decriptare pentru verificare"   
+ Decriptare pentru verificare
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ openssl enc -d -aes-128-ecb -in hashing_ecb.enc -out decrypted_ecb.txt -K $(xxd -p key128.bin) -nosalt
+                                                                                                 
+┌──(kali㉿kali)-[~]
+└─$ openssl enc -d -aes-192-cfb -in hashing_cfb.enc -out decrypted_cfb.txt -K $(xxd -p key192.bin) -iv $(xxd -p iv.bin) -nosalt
+                                                                                                                                                
+┌──(kali㉿kali)-[~]
+└─$ echo " ECB "      
+ ECB 
+                                                                                                                                                
+┌──(kali㉿kali)-[~]
+└─$ cat decrypted_ecb.txt
+The password is a strong password that the user is using and sends the password to a colleague
+                                                                                                                                                
+┌──(kali㉿kali)-[~]
+└─$ echo "CFB"                   
+CFB
+                                                                                                                                                
+┌──(kali㉿kali)-[~]
+└─$ cat decrypted_cfb.txt
+The password is a strong password that the user is using and sends the password to a colleague
